@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import Logger from "./logger";
 
 dotenv.config();
 
@@ -13,7 +12,7 @@ const parseServers = (server_ids: string): string[] => {
   return servers;
 };
 
-interface Config {
+export interface Config {
   client_token: string;
   servers: string[];
 }
