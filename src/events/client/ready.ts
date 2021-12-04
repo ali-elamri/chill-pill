@@ -4,8 +4,8 @@ import { ExecuteFunction } from "../../interfaces/event";
 
 const execute: ExecuteFunction = async (client, interaction) => {
   client.user?.setActivity("Chilling... 💊");
-
   Logger.info(`💊 Chill Pill is ready!`);
+  client.registerGuildCommands();
 };
 
 export default {
