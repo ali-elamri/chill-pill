@@ -1,0 +1,46 @@
+[
+  {
+    "category": "Structure",
+    "todos": [],
+    "done": [
+      "Extend default djs client",
+      "Dynamic event handler",
+      "Dynamic command handler",
+      "Multiple server ids",
+      "Cleaner typings & interfaces?"
+    ]
+  },
+  {
+    "category": "Features",
+    "todos": [
+      "Log all commands",
+      "Usage instructions",
+      "Command aliases",
+      "Database",
+      "Server role assignment on reaction",
+      "Permissions",
+      "Cooldown",
+      "top.gg",
+      "Testing"
+    ],
+    "done": []
+  },
+  {
+    "category": "Commands",
+    "done": ["/help", "/help ?command", "/ping", "/todos"],
+    "todos": [
+      "/birthday",
+      "/ping ?mention",
+      "/exile !mention",
+      "/purge !mention||!count",
+      "/shifumi",
+      "/scoreboard",
+      "/dnd"
+    ]
+  },
+  {
+    "category": "Events",
+    "done": ["ready", "interactionCreate"],
+    "todos": ["welcome user", "bye user", "server invites"]
+  }
+]

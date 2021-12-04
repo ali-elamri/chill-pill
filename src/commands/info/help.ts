@@ -43,7 +43,7 @@ const execute: ExecuteFunction = async (
         url: "https://github.com/Shoodey/chill-pill",
         fields,
         description:
-          "Feel like coming up additional ones? Feel free to contibute to the [GitHub repo](https://github.com/Shoodey/chill-pill) and star it!",
+          "Feel like coming up with additional ones? Feel free to contibute to the [GitHub repo](https://github.com/Shoodey/chill-pill) and star it!",
       },
       interaction
     );
