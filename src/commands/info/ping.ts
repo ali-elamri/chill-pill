@@ -55,7 +55,7 @@ const command: Command = {
   aliases: [],
   options: [],
   ephemeral: true,
-  cooldown: 0,
+  cooldown: 3,
   category: CommandCategory.info,
   description: "Pings you back... duh!",
   usage: "/ping",
