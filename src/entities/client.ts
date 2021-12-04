@@ -1,4 +1,11 @@
-import { Client as DJSClient, ClientOptions, Collection } from "discord.js";
+import {
+  Client as DJSClient,
+  ClientOptions,
+  Collection,
+  CommandInteraction,
+  MessageEmbed,
+  MessageEmbedOptions,
+} from "discord.js";
 import { promisify } from "util";
 import { Event } from "../interfaces/event";
 import { Config } from "./config";
@@ -25,6 +32,23 @@ class Client extends DJSClient {
     this.login(this.config.client_token)
       .then(() => Logger.info(`It's alive.`))
       .catch((e) => Logger.error(e));
+  }
+
+  public embed(
+    data: MessageEmbedOptions,
+    interaction: CommandInteraction
+  ): MessageEmbed {
+    return new MessageEmbed({
+      ...data,
+      color: "LUMINOUS_VIVID_PINK", // #E91E63
+      footer: {
+        text: `${interaction.user.tag} | 💊 Chill Pill`,
+        iconURL: interaction.user.displayAvatarURL({
+          dynamic: true,
+          format: "png",
+        }),
+      },
+    });
   }
 
   public async registerGuildCommands() {
