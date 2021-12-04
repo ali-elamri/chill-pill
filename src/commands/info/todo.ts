@@ -14,10 +14,6 @@ const execute: ExecuteFunction = async (
   const option = interaction.options.get("category")?.value as string;
 
   const fields: Array<EmbedFieldData> = todosJSON.map((section) => {
-    if (option && option !== section.category) {
-      return;
-    }
-
     const value =
       section.todos
         .map((todo) => {
