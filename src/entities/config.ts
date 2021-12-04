@@ -17,7 +17,7 @@ export interface Config {
   servers: string[];
 }
 
-export const config: Config = {
+export const config = {
   client_token: process.env.CLIENT_TOKEN!,
   servers: parseServers(process.env.SERVER_IDS!),
-};
+} as Config;
