@@ -1,9 +1,4 @@
-import {
-  Client as DJSClient,
-  ClientOptions,
-  Collection,
-  Guild,
-} from "discord.js";
+import { Client as DJSClient, ClientOptions, Collection } from "discord.js";
 import { promisify } from "util";
 import { Event } from "../interfaces/event";
 import { Config } from "./config";
