@@ -14,6 +14,7 @@ import { Command, CommandCategory } from "../interfaces/command";
 const globPromise = promisify(glob);
 class Client extends DJSClient {
   public config: Config;
+  public events: Collection<string, Event> = new Collection();
   public commands: Collection<string, Command> = new Collection();
   public categories: Set<string> = new Set();
 
@@ -63,6 +64,7 @@ class Client extends DJSClient {
 
     eventFiles.map(async (eventFile: string) => {
       const event: Event = await this._importFile(eventFile);
+      this.events.set(event.name, event);
       if (event.once) {
         this.once(event.name, (interaction) => {
           event.execute(this, interaction);
