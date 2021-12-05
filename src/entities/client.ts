@@ -12,6 +12,7 @@ import { Config } from "./config";
 import Logger from "./logger";
 import glob from "glob";
 import { Command, CommandCategory } from "../interfaces/command";
+import GuildService from "../services/guildService";
 
 const globPromise = promisify(glob);
 class Client extends DJSClient {
@@ -68,6 +69,7 @@ class Client extends DJSClient {
         return;
       }
       guild.commands.set(commands);
+      GuildService.save(guild.id, guild.name);
     });
   }
 
