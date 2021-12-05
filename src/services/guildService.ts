@@ -1,14 +1,5 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { firestore, createCollection } from "../entities/firebase";
-import Logger from "../entities/logger";
+import { doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
+import { createCollection } from "../entities/firebase";
 import { Guild } from "../interfaces/guild";
 
 abstract class GuildService {
