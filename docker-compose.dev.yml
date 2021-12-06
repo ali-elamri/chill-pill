@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  node:
+    build:
+      target: development
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/home/chill-pill/src:ro
+      - ./nodemon.json:/home/chill-pill/nodemon.json:ro
+    command: npm run dev
