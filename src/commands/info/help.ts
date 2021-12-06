@@ -77,7 +77,6 @@ const execute: ExecuteFunction = async (
           inline: true,
         },
       ],
-      // eslint-disable-next-line @typescript-eslint/indent
       description: `
            **Name:** \`${commandToHelpWith.name}\`
            **Aliases:** \`${aliases}\`

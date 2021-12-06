@@ -16,9 +16,9 @@ const level = () => {
 
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'HH:mm:ss:ms - DD-MM-YYYY' }),
-  winston.format.printf(
-    (info) => `${info.timestamp} | ${info.level}: ${info.message}`,
-  ),
+  winston.format.printf((info) => {
+    return `${info.timestamp} | ${info.level}: ${info.message}`;
+  }),
 );
 
 const transports = [

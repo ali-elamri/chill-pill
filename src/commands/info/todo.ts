@@ -1,30 +1,28 @@
-import { CommandInteraction, EmbedFieldData, MessageEmbed } from "discord.js";
-import todosJSON from "../../data/todos.json";
-import Client from "../../entities/client";
+import { CommandInteraction, EmbedFieldData, MessageEmbed } from 'discord.js';
+import todosJSON from '../../data/todos.json';
+import Client from '../../entities/client';
 import {
   Command,
   CommandCategory,
   ExecuteFunction,
-} from "../../interfaces/command";
+} from '../../interfaces/command';
 
 const execute: ExecuteFunction = async (
   client: Client,
-  interaction: CommandInteraction
+  interaction: CommandInteraction,
 ) => {
-  const option = interaction.options.get("category")?.value as string;
-
   const fields: Array<EmbedFieldData> = todosJSON.map((section) => {
     const value =
       section.todos
         .map((todo) => {
           return `:white_check_mark: ${todo} \n`;
         })
-        .join("") +
+        .join('') +
       section.done
         .map((todo) => {
           return `:x: ${todo} \n`;
         })
-        .join("");
+        .join('');
 
     return {
       name: section.category,
@@ -33,15 +31,15 @@ const execute: ExecuteFunction = async (
     };
   });
 
-  let messageEmbed: MessageEmbed = client.embed(
+  const messageEmbed: MessageEmbed = client.embed(
     {
-      title: `Todo`,
-      url: "https://github.com/Shoodey/chill-pill",
+      title: 'Todo',
+      url: 'https://github.com/Shoodey/chill-pill',
       fields,
       description:
-        "Feel like coming up with additional ones? Feel free to contibute to the [GitHub repo](https://github.com/Shoodey/chill-pill) and star it!",
+        'Feel like coming up with additional ones? Feel free to contibute to the [GitHub repo](https://github.com/Shoodey/chill-pill) and star it!',
     },
-    interaction
+    interaction,
   );
 
   return interaction.reply({
@@ -51,20 +49,20 @@ const execute: ExecuteFunction = async (
 };
 
 const command: Command = {
-  name: "todo",
+  name: 'todo',
   aliases: [],
   options: [
     {
-      name: "category",
-      type: "STRING",
-      description: "Todo category",
+      name: 'category',
+      type: 'STRING',
+      description: 'Todo category',
     },
   ],
   ephemeral: true,
   cooldown: 3,
   category: CommandCategory.info,
-  description: "Lists todos",
-  usage: "/todo",
+  description: 'Lists todos',
+  usage: '/todo',
   execute,
 };
 
