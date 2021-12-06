@@ -15,7 +15,7 @@ on:
   
 env:
   REGISTRY: docker.pkg.github.com # we will push our docker-image to the GitHub packages
-  REPO: tfarras/nodejs-deploy/nodejs-image # is the name of our image which will be used to push or pull it
+  REPO: shoodey/chill-pill # is the name of our image which will be used to push or pull it
   CONTAINER: chill-pill_node # name of the container which will be used to stop or start the container
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
