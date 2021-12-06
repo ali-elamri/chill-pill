@@ -9,6 +9,8 @@
     "dev": "nodemon src/index.ts",
     "tsc-watch": "tsc -w --skipLibCheck",
     "prepare": "husky install .husky",
+    "lint": "eslint --cache \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --cache --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -30,8 +32,11 @@
     "eslint": "^8.4.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.2",
@@ -45,8 +50,10 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npx pretty-quick --staged ng lint ng test",
-      "pre-push": "ng build --aot true"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "npm run lint:fix"
   }
 }
