@@ -1,9 +1,9 @@
-import { doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
-import { createCollection } from "../entities/firebase";
-import { Guild } from "../interfaces/guild";
+import { doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
+import { createCollection } from '../entities/firebase';
+import { Guild } from '../interfaces/guild';
 
 abstract class GuildService {
-  public static colRef = createCollection<Guild>("guilds");
+  public static colRef = createCollection<Guild>('guilds');
 
   /**
    * Creates new or updates document if exists
@@ -20,7 +20,7 @@ abstract class GuildService {
         id,
         name,
       },
-      { merge: true }
+      { merge: true },
     );
   }
 

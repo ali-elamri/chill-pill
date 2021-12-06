@@ -1,13 +1,14 @@
-import dotenv from "dotenv";
-import { env } from "process";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const parseServers = (server_ids: string): string[] => {
-  let servers: string[] = [];
+  const servers: string[] = [];
 
-  server_ids.split(",").map((server_id) => {
-    if (server_id) servers.push(server_id.trim());
+  server_ids.split(',').forEach((server_id) => {
+    if (server_id) {
+      servers.push(server_id.trim());
+    }
   });
 
   return servers;

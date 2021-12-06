@@ -1,11 +1,11 @@
-import { CommandInteraction } from "discord.js";
-import Client from "../../entities/client";
-import { Command } from "../../interfaces/command";
-import { Event, ExecuteFunction } from "../../interfaces/event";
+import { CommandInteraction } from 'discord.js';
+import Client from '../../entities/client';
+import { Command } from '../../interfaces/command';
+import { Event, ExecuteFunction } from '../../interfaces/event';
 
 const execute: ExecuteFunction = async (
   client: Client,
-  interaction: CommandInteraction
+  interaction: CommandInteraction,
 ) => {
   if (!interaction.isCommand()) return;
 
@@ -20,10 +20,10 @@ const execute: ExecuteFunction = async (
       embeds: [
         client.embed(
           {
-            title: `❌ Error...`,
-            description: `Seems like the command does not exist...`,
+            title: '❌ Error...',
+            description: 'Seems like the command does not exist...',
           },
-          interaction
+          interaction,
         ),
       ],
       ephemeral: true,
@@ -32,6 +32,6 @@ const execute: ExecuteFunction = async (
 };
 
 export default {
-  name: "interactionCreate",
+  name: 'interactionCreate',
   execute,
 } as Event;

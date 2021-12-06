@@ -1,11 +1,11 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
   collection,
   DocumentData,
   CollectionReference,
-} from "firebase/firestore";
-import { config } from "./config";
+} from 'firebase/firestore';
+import { config } from './config';
 
 export const firebaseApp = initializeApp(config.firebase);
 

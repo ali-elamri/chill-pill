@@ -1,5 +1,5 @@
-import Client from './entities/client';
 import { ClientOptions, Intents } from 'discord.js';
+import Client from './entities/client';
 import { config } from './entities/config';
 
 const options: ClientOptions = {
@@ -12,5 +12,3 @@ const options: ClientOptions = {
 };
 
 new Client(options, config).boot();
-
-console.log('eslint was here');

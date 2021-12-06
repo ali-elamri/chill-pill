@@ -1,9 +1,9 @@
-import { doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
-import { createCollection } from "../entities/firebase";
-import { Todo } from "../interfaces/todo";
+import { doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
+import { createCollection } from '../entities/firebase';
+import { Todo } from '../interfaces/todo';
 
 abstract class TodoService {
-  public static colRef = createCollection<Todo>("todos");
+  public static colRef = createCollection<Todo>('todos');
 
   /**
    * Creates new or updates document if exists
@@ -21,7 +21,7 @@ abstract class TodoService {
         category,
         done,
       },
-      { merge: true }
+      { merge: true },
     );
   }
 

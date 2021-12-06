@@ -1,15 +1,14 @@
-import Logger from "../../entities/logger";
-import { Event } from "../../interfaces/event";
-import { ExecuteFunction } from "../../interfaces/event";
+import Logger from '../../entities/logger';
+import { Event, ExecuteFunction } from '../../interfaces/event';
 
-const execute: ExecuteFunction = async (client, interaction) => {
-  client.user?.setActivity("Chilling... 💊");
-  Logger.info(`💊 Chill Pill is ready!`);
+const execute: ExecuteFunction = async (client) => {
+  client.user?.setActivity('Chilling... 💊');
+  Logger.info('💊 Chill Pill is ready!');
   client.registerGuildCommands();
 };
 
 export default {
-  name: "ready",
+  name: 'ready',
   once: true,
   execute,
 } as Event;

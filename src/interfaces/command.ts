@@ -1,9 +1,9 @@
-import { ApplicationCommandOption, CommandInteraction } from "discord.js";
-import Client from "../entities/client";
+import { ApplicationCommandOption, CommandInteraction } from 'discord.js';
+import Client from '../entities/client';
 
 export enum CommandCategory {
-  admin = "Admin Command",
-  info = "Information Command",
+  admin = 'Admin Command',
+  info = 'Information Command',
 }
 
 export interface ExecuteFunction {
