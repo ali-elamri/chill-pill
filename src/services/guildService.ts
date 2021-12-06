@@ -3,7 +3,7 @@ import { createCollection } from "../entities/firebase";
 import { Guild } from "../interfaces/guild";
 
 abstract class GuildService {
-  public static guildsCollection = createCollection<Guild>("guilds");
+  public static colRef = createCollection<Guild>("guilds");
 
   /**
    * Creates new or updates document if exists
@@ -12,10 +12,10 @@ abstract class GuildService {
    * @param name
    */
   public static async save(id: string, name: string) {
-    const guildsRef = doc(this.guildsCollection, id);
+    const docRef = doc(this.colRef, id);
 
     await setDoc(
-      guildsRef,
+      docRef,
       {
         id,
         name,
@@ -30,7 +30,7 @@ abstract class GuildService {
    * @returns
    */
   public static async all(): Promise<Guild[]> {
-    const q = query(this.guildsCollection);
+    const q = query(this.colRef);
     const qSnap = await getDocs(q);
     const guilds: Guild[] = [];
 
@@ -48,7 +48,7 @@ abstract class GuildService {
    * @returns
    */
   public static async find(id: string): Promise<Guild | null> {
-    const docRef = doc(this.guildsCollection, id);
+    const docRef = doc(this.colRef, id);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
