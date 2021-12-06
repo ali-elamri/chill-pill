@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build, push and deploy app
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+env:
+  REGISTRY: docker.pkg.github.com # we will push our docker-image to the GitHub packages
+  REPO: tfarras/nodejs-deploy/nodejs-image # is the name of our image which will be used to push or pull it
+  CONTAINER: chill-pill_node # name of the container which will be used to stop or start the container
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  push_to_registry:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the latest commit on the main branch
+        uses: actions/checkout@v2
+
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          repository: ${{ env.REPO }}
+          tag_with_ref: true
+  deploy:
+    needs: [push_to_registry]
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH connection
+        uses: webfactory/ssh-agent@v0.5.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Login to the GitHub Packages Docker Registry
+        run: ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker login ${{env.REGISTRY}} -u ${{github.actor}} -p ${{secrets.GITHUB_TOKEN}}"
+
+      - name: Pull latest container
+        run: |
+          ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker pull ${{env.REGISTRY}}/${{env.REPO}}:latest"
+      - name: Stop deployed container
+        continue-on-error: true
+        run: |
+          ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker stop ${{env.CONTAINER}}"
+      - name: Remove deployed container
+        continue-on-error: true
+        run: |
+          ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker rm ${{env.CONTAINER}}"
+      - name: Start docker container
+        run: |
+          ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker run -d --name=${{env.CONTAINER}} ${{env.REGISTRY}}/${{env.REPO}}:latest"
+      - name: Logout from the GitHub Packages Docker Registry
+        run: ssh ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}} "docker logout ${{env.REGISTRY}}"
+          
+#   # This workflow contains a single job called "build"
+#   build:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
+
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+
+#       # Runs a single command using the runners shell
+#       - name: Run a one-line script
+#         run: echo Hello, world!
+
+#       # Runs a set of commands using the runners shell
+#       - name: Run a multi-line script
+#         run: |
+#           echo Add other actions to build,
+#           echo test, and deploy your project.
