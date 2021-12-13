@@ -1,46 +1,191 @@
 [
   {
-    "category": "Structure",
-    "todos": [],
-    "done": [
-      "Extend default djs client",
-      "Dynamic event handler",
-      "Dynamic command handler",
-      "Multiple server ids",
-      "Cleaner typings & interfaces?"
-    ]
+    "name": "Extend default DJS client",
+    "description": "",
+    "category": "structure",
+    "done": true,
+    "author": "88892383067934720"
   },
   {
-    "category": "Features",
-    "todos": [
-      "Log all commands",
-      "Usage instructions",
-      "Command aliases",
-      "Database",
-      "Server role assignment on reaction",
-      "Permissions",
-      "Cooldown",
-      "top.gg",
-      "Testing"
-    ],
-    "done": []
+    "name": "Dynamic event handler",
+    "description": "",
+    "category": "structure",
+    "done": true,
+    "author": "88892383067934720"
   },
   {
-    "category": "Commands",
-    "done": ["/help", "/help ?command", "/ping", "/todos"],
-    "todos": [
-      "/birthday",
-      "/ping ?mention",
-      "/exile !mention",
-      "/purge !mention||!count",
-      "/shifumi",
-      "/scoreboard",
-      "/dnd"
-    ]
+    "name": "Dynamic commands handler",
+    "description": "",
+    "category": "structure",
+    "done": true,
+    "author": "88892383067934720"
   },
   {
-    "category": "Events",
-    "done": ["ready", "interactionCreate"],
-    "todos": ["welcome user", "bye user", "server invites"]
+    "name": "Multiple servers",
+    "description": "",
+    "category": "structure",
+    "done": true,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Cleaner typings & interfaces?",
+    "description": "",
+    "category": "structure",
+    "done": true,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Log all commands",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Usage instructions",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Commands aliases",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Database",
+    "description": "",
+    "category": "features",
+    "done": true,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Server role assignment on reaction",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Permissions",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Cooldown",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "top.gg",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "Testing",
+    "description": "",
+    "category": "features",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/birthday",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/ping ?mention",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/exile !mention",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/suggest autocomplete with buttons",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/purge !mention||!count",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/shifumi",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/scoreboard",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "/dnd",
+    "description": "",
+    "category": "commands",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "ready",
+    "description": "",
+    "category": "events",
+    "done": true,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "interaction",
+    "description": "",
+    "category": "events",
+    "done": true,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "welcome new user",
+    "description": "",
+    "category": "events",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "bye user",
+    "description": "",
+    "category": "events",
+    "done": false,
+    "author": "88892383067934720"
+  },
+  {
+    "name": "server invites",
+    "description": "",
+    "category": "events",
+    "done": false,
+    "author": "88892383067934720"
   }
 ]
