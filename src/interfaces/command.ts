@@ -4,6 +4,7 @@ import Client from '../entities/client';
 export enum CommandCategory {
   admin = 'Admin Command',
   info = 'Information Command',
+  config = 'Configuration Command',
 }
 
 export interface ExecuteFunction {
