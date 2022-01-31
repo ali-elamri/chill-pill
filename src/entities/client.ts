@@ -8,7 +8,9 @@ import {
 } from 'discord.js';
 import { promisify } from 'util';
 import glob from 'glob';
-import { Event } from '../interfaces/event';
+import DisTube from 'distube';
+import { YouTubeDLPlugin } from '@distube/yt-dlp';
+import { DistubeArgs, DistubeEvent, Event } from '../interfaces/event';
 import { Config } from './config';
 import Logger from './logger';
 import { Command, CommandCategory } from '../interfaces/command';
@@ -18,11 +20,19 @@ const globPromise = promisify(glob);
 class Client extends DJSClient {
   public config: Config;
 
-  public events: Collection<string, Event> = new Collection();
+  public events: Collection<string, Event | DistubeEvent> = new Collection();
 
   public commands: Collection<string, Command> = new Collection();
 
   public categories: Set<string> = new Set();
+
+  public distube = new DisTube(this, {
+    emitNewSongOnly: false,
+    leaveOnFinish: true,
+    leaveOnStop: false,
+    youtubeDL: false,
+    plugins: [new YouTubeDLPlugin()],
+  });
 
   constructor(options: ClientOptions, config: Config) {
     super(options);
@@ -31,6 +41,7 @@ class Client extends DJSClient {
 
   public async boot() {
     this.loadEvents();
+    this.loadDistubeEvent();
     this.loadCommands();
 
     this.login(this.config.client_token)
@@ -89,12 +100,13 @@ class Client extends DJSClient {
 
   private async loadEvents() {
     const eventFiles: string[] = await globPromise(
-      `${__dirname}/../events/*/*{.ts,.js}`,
+      `${__dirname}/../events/{client,guild}/*{.ts,.js}`,
     );
 
     eventFiles.map(async (eventFile: string) => {
       const event: Event = await this.importFile(eventFile);
       this.events.set(event.name, event);
+
       if (event.once) {
         this.once(event.name, (interaction) => {
           event.execute(this, interaction);
@@ -104,6 +116,21 @@ class Client extends DJSClient {
           event.execute(this, interaction);
         });
       }
+    });
+  }
+
+  private async loadDistubeEvent() {
+    const eventFiles: string[] = await globPromise(
+      `${__dirname}/../events/distube/*{.ts,.js}`,
+    );
+
+    eventFiles.map(async (eventFile: string) => {
+      const event: DistubeEvent = await this.importFile(eventFile);
+      this.events.set(event.name, event);
+
+      this.distube.on(event.name, (...args: DistubeArgs) => {
+        event.execute(this, ...args);
+      });
     });
   }
 

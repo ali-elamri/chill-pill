@@ -5,6 +5,7 @@ export enum CommandCategory {
   admin = 'Admin Command',
   info = 'Information Command',
   config = 'Configuration Command',
+  music = 'Music Command',
 }
 
 export interface ExecuteFunction {
