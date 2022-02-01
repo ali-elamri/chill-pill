@@ -1,9 +1,12 @@
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { Queue, RepeatMode, Song } from 'distube';
 import { join } from 'lodash';
-import { DistubeEvent, DistubeExecuteFunction } from '../../interfaces/event';
+import {
+  DistubeEvent,
+  DistubeEventExecuteFunction,
+} from '../../interfaces/event';
 
-const execute: DistubeExecuteFunction = async (client, ...args) => {
+const execute: DistubeEventExecuteFunction = async (client, ...args) => {
   const queue: Queue = args[0] as Queue;
   const song: Song = args[1] as Song;
 

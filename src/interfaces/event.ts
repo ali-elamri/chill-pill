@@ -6,11 +6,11 @@ import {
 } from 'discord.js';
 import Client from '../entities/client';
 
-export interface ExecuteFunction {
+export interface EventExecuteFunction {
   (client: Client, interaction: CommandInteraction): Promise<void>;
 }
 
-export interface DistubeExecuteFunction {
+export interface DistubeEventExecuteFunction {
   (client: Client, ...args: DistubeArgs): Awaitable<void>;
 }
 
@@ -23,10 +23,10 @@ export type DistubeArgs =
 export interface Event {
   name: string;
   once?: boolean;
-  execute: ExecuteFunction;
+  execute: EventExecuteFunction;
 }
 
 export interface DistubeEvent {
   name: keyof DisTubeEvents;
-  execute: DistubeExecuteFunction;
+  execute: DistubeEventExecuteFunction;
 }

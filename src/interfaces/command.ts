@@ -18,17 +18,17 @@ export enum CommandType {
   button,
 }
 
-export interface ExecuteFunction {
+export interface SlashCommandExecuteFunction {
   (client: Client, interaction: CommandInteraction): Promise<void>;
 }
 
-export interface ButtonExecuteFunction {
+export interface ButtonCommandExecuteFunction {
   (client: Client, interaction: ButtonInteraction): Promise<void>;
 }
 
 export interface Command {
   name: string;
-  interactionType: CommandType;
+  commandType: CommandType;
   category: CommandCategory;
   description: string;
   usage: string;
@@ -36,9 +36,12 @@ export interface Command {
   options?: ApplicationCommandOption[];
   ephemeral?: boolean;
   cooldown?: number;
-  execute: ExecuteFunction;
 }
 
-export interface Button extends Omit<Command, 'execute'> {
-  execute: ButtonExecuteFunction;
+export interface SlashCommand extends Command {
+  execute: SlashCommandExecuteFunction;
+}
+
+export interface ButtonCommand extends Command {
+  execute: ButtonCommandExecuteFunction;
 }

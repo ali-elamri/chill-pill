@@ -10,13 +10,13 @@ import {
 } from 'discord.js';
 import Client from '../../entities/client';
 import {
-  Command,
+  SlashCommand,
   CommandCategory,
   CommandType,
-  ExecuteFunction,
+  SlashCommandExecuteFunction,
 } from '../../interfaces/command';
 
-const execute: ExecuteFunction = async (
+const execute: SlashCommandExecuteFunction = async (
   client: Client,
   interaction: CommandInteraction,
 ) => {
@@ -85,9 +85,9 @@ const execute: ExecuteFunction = async (
   }
 };
 
-const command: Command = {
+const command: SlashCommand = {
   name: 'clear',
-  interactionType: CommandType.command,
+  commandType: CommandType.command,
   aliases: [],
   options: [
     {

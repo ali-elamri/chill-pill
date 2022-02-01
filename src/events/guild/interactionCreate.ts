@@ -1,19 +1,18 @@
-import { ButtonInteraction, CommandInteraction, Interaction } from 'discord.js';
+import { Interaction } from 'discord.js';
+import { ButtonCommand, SlashCommand } from '../../interfaces/command';
 import Client from '../../entities/client';
-import { Command } from '../../interfaces/command';
-import { Event, ExecuteFunction } from '../../interfaces/event';
+import { Event, EventExecuteFunction } from '../../interfaces/event';
 
-const execute: ExecuteFunction = async (
+const execute: EventExecuteFunction = async (
   client: Client,
   interaction: Interaction,
 ) => {
   if (!interaction.guild) return;
 
   if (interaction.isButton()) {
-    const buttonInteraction: ButtonInteraction = interaction;
-    const command: Command = client.commands.get(
-      buttonInteraction.customId,
-    ) as Command;
+    const command: ButtonCommand = client.commands.get(
+      interaction.customId,
+    ) as ButtonCommand;
 
     if (command) {
       await command.execute(client, interaction);
@@ -28,9 +27,9 @@ const execute: ExecuteFunction = async (
   }
 
   if (interaction.isCommand()) {
-    const command: Command = client.commands.get(
+    const command: SlashCommand = client.commands.get(
       interaction.commandName,
-    ) as Command;
+    ) as SlashCommand;
 
     if (command) {
       await command.execute(client, interaction);

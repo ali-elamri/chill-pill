@@ -13,7 +13,12 @@ import { YouTubeDLPlugin } from '@distube/yt-dlp';
 import { DistubeArgs, DistubeEvent, Event } from '../interfaces/event';
 import { Config } from './config';
 import Logger from './logger';
-import { Command, CommandCategory, CommandType } from '../interfaces/command';
+import {
+  SlashCommand,
+  CommandCategory,
+  CommandType,
+  Command,
+} from '../interfaces/command';
 // import GuildService from '../services/guildService';
 
 const globPromise = promisify(glob);
@@ -77,7 +82,7 @@ class Client extends DJSClient {
     const commands: Command[] = [...this.commands.values()].filter(
       (command) => {
         return (
-          command.interactionType === CommandType.command &&
+          command.commandType !== CommandType.button &&
           command.category !== CommandCategory.admin
         );
       },
@@ -150,7 +155,7 @@ class Client extends DJSClient {
     );
 
     commandFiles.map(async (commandFile: string) => {
-      const command: Command = await this.importFile(commandFile);
+      const command: SlashCommand = await this.importFile(commandFile);
 
       this.commands.set(command.name, command);
       this.categories.add(command.category);

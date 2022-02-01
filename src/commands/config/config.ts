@@ -4,14 +4,14 @@ import moment from 'moment';
 import { TodoGrouping, TodoCategory } from '../../interfaces/todo';
 import Client from '../../entities/client';
 import {
-  Command,
+  SlashCommand,
   CommandCategory,
   CommandType,
-  ExecuteFunction,
+  SlashCommandExecuteFunction,
 } from '../../interfaces/command';
 import TodoService from '../../services/todoService';
 
-const execute: ExecuteFunction = async (
+const execute: SlashCommandExecuteFunction = async (
   client: Client,
   interaction: CommandInteraction,
 ) => {
@@ -64,9 +64,9 @@ const execute: ExecuteFunction = async (
   });
 };
 
-const command: Command = {
+const command: SlashCommand = {
   name: 'config',
-  interactionType: CommandType.command,
+  commandType: CommandType.command,
   aliases: [],
   ephemeral: true,
   cooldown: 3,

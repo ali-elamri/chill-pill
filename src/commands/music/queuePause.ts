@@ -1,22 +1,22 @@
 import { CommandInteraction } from 'discord.js';
 import Client from '../../entities/client';
 import {
-  Command,
+  SlashCommand,
   CommandCategory,
   CommandType,
-  ExecuteFunction,
+  SlashCommandExecuteFunction,
 } from '../../interfaces/command';
 
-const execute: ExecuteFunction = async (
+const execute: SlashCommandExecuteFunction = async (
   client: Client,
   interaction: CommandInteraction,
 ) => {
   console.log(client);
 };
 
-const command: Command = {
+const command: SlashCommand = {
   name: 'queuePause',
-  interactionType: CommandType.button,
+  commandType: CommandType.button,
   aliases: [],
   options: [],
   ephemeral: true,

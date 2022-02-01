@@ -2,15 +2,15 @@ import { CommandInteraction, Message } from 'discord.js';
 import { promisify } from 'util';
 import Client from '../../entities/client';
 import {
-  Command,
+  SlashCommand,
+  SlashCommandExecuteFunction,
   CommandCategory,
   CommandType,
-  ExecuteFunction,
 } from '../../interfaces/command';
 
 const wait = promisify(setTimeout);
 
-const execute: ExecuteFunction = async (
+const execute: SlashCommandExecuteFunction = async (
   client: Client,
   interaction: CommandInteraction,
 ) => {
@@ -51,9 +51,9 @@ const execute: ExecuteFunction = async (
   });
 };
 
-const command: Command = {
+const command: SlashCommand = {
   name: 'ping',
-  interactionType: CommandType.command,
+  commandType: CommandType.command,
   aliases: [],
   options: [],
   ephemeral: true,
