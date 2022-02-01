@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { Queue, RepeatMode, Song } from 'distube';
 import { join } from 'lodash';
 import { DistubeEvent, DistubeExecuteFunction } from '../../interfaces/event';
@@ -10,15 +10,23 @@ const execute: DistubeExecuteFunction = async (client, ...args) => {
   if (queue.repeatMode !== RepeatMode.QUEUE) {
     client.distube.setRepeatMode(queue, RepeatMode.QUEUE);
   }
+  if (!queue.autoplay) {
+    client.distube.toggleAutoplay(queue);
+  }
+
+  client.setQueue(queue);
 
   const formatQueue = (q: Queue, s: Song) => {
-    const queueList: string[] = q.songs.map((item, id) => {
-      return `${id + 1} - ${item.name} | \`${item.formattedDuration}\``;
+    const queueSubset = q.songs.slice(0, 10);
+
+    const queueList: string[] = queueSubset.map((item, id) => {
+      return `**${id + 1}** - ${item.name} | \`${item.formattedDuration}\``;
     });
 
     return join(queueList, '\n');
   };
-  const embed: MessageEmbed = new MessageEmbed()
+
+  const messageEmbed: MessageEmbed = new MessageEmbed()
     .setColor('LUMINOUS_VIVID_PINK')
     .setTitle(
       `🎶 Jukebox is ON! \u3000\u3000\u3000 ${queue.songs.length} songs | ${queue.formattedDuration}`,
@@ -32,7 +40,6 @@ const execute: DistubeExecuteFunction = async (client, ...args) => {
       }),
       url: 'https://chillpill.io',
     })
-    .setDescription('Some description here')
     .setImage(song.thumbnail as string)
     .addField('Queue', formatQueue(queue, song))
     .addField('Currently playing', `${song.name}`)
@@ -50,8 +57,53 @@ const execute: DistubeExecuteFunction = async (client, ...args) => {
       }),
     });
 
+  const firstActionsRow = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setCustomId('queuePreviousPage')
+      .setLabel('Previous Page')
+      .setStyle('SECONDARY')
+      .setDisabled(true),
+    new MessageButton()
+      .setCustomId('queueNextPage')
+      .setLabel('Next Page')
+      .setStyle('SECONDARY')
+      .setDisabled(true),
+  );
+
+  const secondActionsRow = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setCustomId('queuePrevious')
+      .setLabel('Previous')
+      .setStyle('PRIMARY'),
+    new MessageButton()
+      .setCustomId('queueNext')
+      .setLabel('Next')
+      .setStyle('PRIMARY'),
+    new MessageButton()
+      .setCustomId('queueShuffle')
+      .setLabel('Shuffle')
+      .setStyle('SECONDARY'),
+  );
+
+  const thirdActionsRow = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setCustomId('queuePause')
+      .setLabel('Pause')
+      .setStyle('SUCCESS'),
+    new MessageButton()
+      .setCustomId('queueResume')
+      .setLabel('Resume')
+      .setStyle('SUCCESS'),
+    new MessageButton()
+      .setCustomId('queueStop')
+      .setLabel('Stop')
+      .setStyle('DANGER')
+      .setDisabled(true),
+  );
+
   await queue.textChannel?.send({
-    embeds: [embed],
+    embeds: [messageEmbed],
+    components: [firstActionsRow, secondActionsRow, thirdActionsRow],
   });
 };
 

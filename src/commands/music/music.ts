@@ -7,6 +7,7 @@ import Client from '../../entities/client';
 import {
   Command,
   CommandCategory,
+  CommandType,
   ExecuteFunction,
 } from '../../interfaces/command';
 
@@ -46,150 +47,56 @@ const execute: ExecuteFunction = async (
     });
   }
 
-  try {
-    switch (options.getSubcommand()) {
-      case 'play': {
-        client.distube.play(voiceChannel, options.getString('song'), {
-          member,
-          textChannel: channel,
-        });
-        return await interaction.reply({
-          content: 'Playing now!',
-          ephemeral: true,
-        });
-      }
-      case 'volume': {
-        const volume = options.getNumber('volume', true);
-        if (volume > 100 || volume < 0) {
-          return await interaction.reply({
-            content: 'Volume must be a number between 0 and 100!',
-            ephemeral: true,
-          });
-        }
+  const queue = client.distube.getQueue(voiceChannel);
 
-        client.distube.setVolume(voiceChannel, volume);
-
-        return await interaction.reply({
-          content: `Volume has been set to ${volume}%`,
-          ephemeral: true,
-        });
-      }
-      case 'skip': {
-        const queue = await client.distube.getQueue(voiceChannel);
-
-        if (!queue) {
-          return await interaction.reply({
-            content: 'The queue is empty!',
-            ephemeral: true,
-          });
-        }
-
-        await queue.skip();
-        return await interaction.reply({
-          content: 'You skipped the current song!',
-          ephemeral: true,
-        });
-      }
-      case 'stop': {
-        const queue = await client.distube.getQueue(voiceChannel);
-
-        if (!queue) {
-          return await interaction.reply({
-            content: 'The queue is empty!',
-            ephemeral: true,
-          });
-        }
-
-        await queue.stop();
-        return await interaction.reply({
-          content: 'You stopped the current queue!',
-          ephemeral: true,
-        });
-      }
-      case 'pause': {
-        const queue = await client.distube.getQueue(voiceChannel);
-
-        if (!queue) {
-          return await interaction.reply({
-            content: 'The queue is empty!',
-            ephemeral: true,
-          });
-        }
-
-        await queue.pause();
-        return await interaction.reply({
-          content: 'You paused the current queue!',
-          ephemeral: true,
-        });
-      }
-      case 'resume': {
-        const queue = await client.distube.getQueue(voiceChannel);
-
-        if (!queue) {
-          return await interaction.reply({
-            content: 'The queue is empty!',
-            ephemeral: true,
-          });
-        }
-
-        await queue.resume();
-        return await interaction.reply({
-          content: 'You resumed the current queue!',
-          ephemeral: true,
-        });
-      }
-      case 'queue': {
-        const queue = await client.distube.getQueue(voiceChannel);
-
-        if (!queue) {
-          return await interaction.reply({
-            content: 'The queue is empty!',
-            ephemeral: true,
-          });
-        }
-
-        return await interaction.reply({
-          embeds: [
-            client.embed(
-              {
-                title: '⏳ Queue...',
-                description: `${queue.songs.map((song, id) => {
-                  return `\n**${id + 1}** - ${song.name} - \`${
-                    song.formattedDuration
-                  }\``;
-                })}`,
-              },
-              interaction,
-            ),
-          ],
-          ephemeral: true,
-        });
-      }
-      default: {
-        return await interaction.reply({
-          content: 'Huh?.',
-          ephemeral: true,
-        });
-      }
+  switch (options.getSubcommand()) {
+    case 'play': {
+      client.distube.play(voiceChannel, options.getString('song'), {
+        member,
+        textChannel: channel,
+      });
+      interaction.deferReply();
+      break;
     }
-  } catch (error) {
-    return interaction.reply({
-      embeds: [
-        client.embed(
-          {
-            title: '❌ Something went wrong...',
-            description: JSON.stringify(error),
-          },
-          interaction,
-        ),
-      ],
-      ephemeral: command.ephemeral,
-    });
+
+    case 'queue': {
+      if (!queue) {
+        return interaction.reply({
+          content: 'The queue is empty!',
+          ephemeral: true,
+        });
+      }
+
+      return interaction.reply({
+        embeds: [
+          client.embed(
+            {
+              title: '⏳ Queue...',
+              description: `${queue.songs.map((song, id) => {
+                return `\n**${id + 1}** - ${song.name} - \`${
+                  song.formattedDuration
+                }\``;
+              })}`,
+            },
+            interaction,
+          ),
+        ],
+        ephemeral: true,
+      });
+      break;
+    }
+    default: {
+      // return await interaction.reply({
+      //   content: 'Huh?.',
+      //   ephemeral: true,
+      // });
+    }
   }
 };
 
 const command: Command = {
   name: 'music',
+  interactionType: CommandType.command,
   aliases: [],
   options: [
     {
@@ -206,47 +113,9 @@ const command: Command = {
       ],
     },
     {
-      name: 'volume',
-      type: 'SUB_COMMAND',
-      description: 'Conrols the bot volume.',
-      options: [
-        {
-          name: 'percentage',
-          type: 'NUMBER',
-          description: "A percentage (%), the bot's music volume (100 = 100%)",
-          required: true,
-        },
-      ],
-    },
-    {
       name: 'queue',
       type: 'SUB_COMMAND',
       description: 'Get queue information.',
-    },
-    {
-      name: 'skip',
-      type: 'SUB_COMMAND',
-      description: 'Skips the current song.',
-    },
-    {
-      name: 'pause',
-      type: 'SUB_COMMAND',
-      description: 'Pauses the current song.',
-    },
-    {
-      name: 'resume',
-      type: 'SUB_COMMAND',
-      description: 'Resumes playing the queue.',
-    },
-    {
-      name: 'stop',
-      type: 'SUB_COMMAND',
-      description: 'Stops playing the queue.',
-    },
-    {
-      name: 'clear',
-      type: 'SUB_COMMAND',
-      description: 'Clears the current queue.',
     },
   ],
   ephemeral: true,
