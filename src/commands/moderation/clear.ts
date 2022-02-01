@@ -12,6 +12,7 @@ import Client from '../../entities/client';
 import {
   Command,
   CommandCategory,
+  CommandType,
   ExecuteFunction,
 } from '../../interfaces/command';
 
@@ -86,6 +87,7 @@ const execute: ExecuteFunction = async (
 
 const command: Command = {
   name: 'clear',
+  interactionType: CommandType.command,
   aliases: [],
   options: [
     {

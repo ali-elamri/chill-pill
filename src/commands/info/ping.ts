@@ -4,6 +4,7 @@ import Client from '../../entities/client';
 import {
   Command,
   CommandCategory,
+  CommandType,
   ExecuteFunction,
 } from '../../interfaces/command';
 
@@ -52,6 +53,7 @@ const execute: ExecuteFunction = async (
 
 const command: Command = {
   name: 'ping',
+  interactionType: CommandType.command,
   aliases: [],
   options: [],
   ephemeral: true,

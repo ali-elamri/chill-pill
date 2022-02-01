@@ -6,6 +6,7 @@ import Client from '../../entities/client';
 import {
   Command,
   CommandCategory,
+  CommandType,
   ExecuteFunction,
 } from '../../interfaces/command';
 import TodoService from '../../services/todoService';
@@ -65,6 +66,7 @@ const execute: ExecuteFunction = async (
 
 const command: Command = {
   name: 'todo',
+  interactionType: CommandType.command,
   aliases: [],
   options: [
     {

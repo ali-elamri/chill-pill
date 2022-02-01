@@ -1,4 +1,8 @@
-import { ApplicationCommandOption, CommandInteraction } from 'discord.js';
+import {
+  ApplicationCommandOption,
+  ButtonInteraction,
+  CommandInteraction,
+} from 'discord.js';
 import Client from '../entities/client';
 
 export enum CommandCategory {
@@ -9,12 +13,22 @@ export enum CommandCategory {
   moderation = 'Moderation Command',
 }
 
+export enum CommandType {
+  command,
+  button,
+}
+
 export interface ExecuteFunction {
   (client: Client, interaction: CommandInteraction): Promise<void>;
 }
 
+export interface ButtonExecuteFunction {
+  (client: Client, interaction: ButtonInteraction): Promise<void>;
+}
+
 export interface Command {
   name: string;
+  interactionType: CommandType;
   category: CommandCategory;
   description: string;
   usage: string;
@@ -23,4 +37,8 @@ export interface Command {
   ephemeral?: boolean;
   cooldown?: number;
   execute: ExecuteFunction;
+}
+
+export interface Button extends Omit<Command, 'execute'> {
+  execute: ButtonExecuteFunction;
 }

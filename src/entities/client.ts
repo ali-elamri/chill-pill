@@ -8,13 +8,13 @@ import {
 } from 'discord.js';
 import { promisify } from 'util';
 import glob from 'glob';
-import DisTube from 'distube';
+import DisTube, { Queue } from 'distube';
 import { YouTubeDLPlugin } from '@distube/yt-dlp';
 import { DistubeArgs, DistubeEvent, Event } from '../interfaces/event';
 import { Config } from './config';
 import Logger from './logger';
-import { Command, CommandCategory } from '../interfaces/command';
-import GuildService from '../services/guildService';
+import { Command, CommandCategory, CommandType } from '../interfaces/command';
+// import GuildService from '../services/guildService';
 
 const globPromise = promisify(glob);
 class Client extends DJSClient {
@@ -31,8 +31,11 @@ class Client extends DJSClient {
     leaveOnFinish: true,
     leaveOnStop: false,
     youtubeDL: false,
+    emptyCooldown: 3,
     plugins: [new YouTubeDLPlugin()],
   });
+
+  public queue: Queue | null = null;
 
   constructor(options: ClientOptions, config: Config) {
     super(options);
@@ -72,8 +75,11 @@ class Client extends DJSClient {
 
   public async registerGuildCommands() {
     const commands: Command[] = [...this.commands.values()].filter(
-      (command: Command) => {
-        return command.category !== CommandCategory.admin;
+      (command) => {
+        return (
+          command.interactionType === CommandType.command &&
+          command.category !== CommandCategory.admin
+        );
       },
     );
 
@@ -89,13 +95,17 @@ class Client extends DJSClient {
         return;
       }
       guild.commands.set(commands);
-      GuildService.save(guild.id, guild.name);
+      // GuildService.save(guild.id, guild.name);
     });
   }
 
   public async registerGlobalCommands() {
     Logger.info('Registering global commands.');
     // TODO
+  }
+
+  public setQueue(queue: Queue): void {
+    this.queue = queue;
   }
 
   private async loadEvents() {
@@ -141,6 +151,7 @@ class Client extends DJSClient {
 
     commandFiles.map(async (commandFile: string) => {
       const command: Command = await this.importFile(commandFile);
+
       this.commands.set(command.name, command);
       this.categories.add(command.category);
     });
