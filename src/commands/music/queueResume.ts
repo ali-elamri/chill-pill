@@ -19,22 +19,22 @@ const execute: ButtonCommandExecuteFunction = async (
 
   await autoJoin(client, guild, member);
 
-  if (queue && !queue.paused && !queue.stopped) {
-    queue.pause();
+  if (queue && queue.paused && !queue.stopped) {
+    queue.resume();
   }
 
   interaction.deferUpdate();
 };
 
 const command: ButtonCommand = {
-  name: 'queuePause',
+  name: 'queueResume',
   commandType: CommandType.button,
   aliases: [],
   options: [],
   ephemeral: true,
   cooldown: 3,
   category: CommandCategory.music,
-  description: 'Pause the queue.',
+  description: 'Resume the queue',
   usage: 'Button click on queue.',
   execute,
 };

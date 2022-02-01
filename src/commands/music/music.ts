@@ -49,48 +49,42 @@ const execute: SlashCommandExecuteFunction = async (
 
   const queue = client.distube.getQueue(voiceChannel);
 
-  switch (options.getSubcommand()) {
-    case 'play': {
-      client.distube.play(voiceChannel, options.getString('song'), {
-        member,
-        textChannel: channel,
-      });
-      interaction.deferReply();
-      break;
-    }
+  const musicCommand: string = options.getSubcommand();
 
-    case 'queue': {
-      if (!queue) {
-        return interaction.reply({
-          content: 'The queue is empty!',
-          ephemeral: true,
-        });
-      }
+  if (musicCommand === 'play') {
+    client.distube.play(voiceChannel, options.getString('song'), {
+      member,
+      textChannel: channel,
+    });
 
+    interaction.reply({
+      content: 'Added your song to the queue!',
+      ephemeral: command.ephemeral,
+    });
+  } else if (musicCommand === 'queue') {
+    if (!queue) {
       return interaction.reply({
-        embeds: [
-          client.embed(
-            {
-              title: '⏳ Queue...',
-              description: `${queue.songs.map((song, id) => {
-                return `\n**${id + 1}** - ${song.name} - \`${
-                  song.formattedDuration
-                }\``;
-              })}`,
-            },
-            interaction,
-          ),
-        ],
+        content: 'The queue is empty!',
         ephemeral: true,
       });
-      break;
     }
-    default: {
-      // return await interaction.reply({
-      //   content: 'Huh?.',
-      //   ephemeral: true,
-      // });
-    }
+
+    interaction.reply({
+      embeds: [
+        client.embed(
+          {
+            title: '⏳ Queue...',
+            description: `${queue.songs.map((song, id) => {
+              return `\n**${id + 1}** - ${song.name} - \`${
+                song.formattedDuration
+              }\``;
+            })}`,
+          },
+          interaction,
+        ),
+      ],
+      ephemeral: true,
+    });
   }
 };
 
@@ -108,6 +102,19 @@ const command: SlashCommand = {
           name: 'song',
           type: 'STRING',
           description: 'Link or name for the song to be played.',
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'jump',
+      type: 'SUB_COMMAND',
+      description: 'Jumps to a song in the queue.',
+      options: [
+        {
+          name: 'position',
+          type: 'NUMBER',
+          description: "Song's position in the queue",
           required: true,
         },
       ],
