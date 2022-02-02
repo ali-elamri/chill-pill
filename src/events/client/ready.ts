@@ -1,6 +1,10 @@
 // import { promisify } from 'util';
 import Logger from '../../entities/logger';
-import { Event, EventExecuteFunction } from '../../interfaces/event';
+import {
+  ClientEvent,
+  EventExecuteFunction,
+  EventType,
+} from '../../interfaces/event';
 // import TodoService from '../../services/todoService';
 // import todosJSON from '../../data/todos.json';
 // import { TodoCategory } from '../../interfaces/todo';
@@ -27,6 +31,7 @@ const execute: EventExecuteFunction = async (client) => {
 
 export default {
   name: 'ready',
+  eventType: EventType.client,
   once: true,
   execute,
-} as Event;
+} as ClientEvent;

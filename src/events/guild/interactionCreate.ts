@@ -1,7 +1,11 @@
 import { Interaction } from 'discord.js';
 import { ButtonCommand, SlashCommand } from '../../interfaces/command';
 import Client from '../../entities/client';
-import { Event, EventExecuteFunction } from '../../interfaces/event';
+import {
+  ClientEvent,
+  EventExecuteFunction,
+  EventType,
+} from '../../interfaces/event';
 
 const execute: EventExecuteFunction = async (
   client: Client,
@@ -52,5 +56,6 @@ const execute: EventExecuteFunction = async (
 
 export default {
   name: 'interactionCreate',
+  eventType: EventType.client,
   execute,
-} as Event;
+} as ClientEvent;
