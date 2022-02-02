@@ -25,6 +25,21 @@ export const updateQueuebuttons = (client: Client, queue: Queue) => {
     updateQueueButton(client, 'queueResume', { disabled: true });
     updateQueueButton(client, 'queueSeekReset', { disabled: false });
   }
+
+  // Pagination
+  const { currentPage, totalPages } = client.queueState.pagination;
+  // Previous Page
+  if (currentPage === 1) {
+    updateQueueButton(client, 'queuePreviousPage', { disabled: true });
+  } else {
+    updateQueueButton(client, 'queuePreviousPage', { disabled: false });
+  }
+  // Next Page
+  if (currentPage === totalPages) {
+    updateQueueButton(client, 'queueNextPage', { disabled: true });
+  } else {
+    updateQueueButton(client, 'queueNextPage', { disabled: false });
+  }
 };
 
 export const updateQueueButton = (

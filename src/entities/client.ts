@@ -11,7 +11,11 @@ import { promisify } from 'util';
 import glob from 'glob';
 import DisTube, { Queue } from 'distube';
 import { YouTubeDLPlugin } from '@distube/yt-dlp';
-import { ButtonRow, QueueState } from '../interfaces/queueState';
+import {
+  QueuePagination,
+  ButtonRow,
+  QueueState,
+} from '../interfaces/queueState';
 import {
   ButtonCommand,
   CommandType,
@@ -52,6 +56,11 @@ class Client extends DJSClient {
 
   public queueState: QueueState = {
     queue: null,
+    pagination: {
+      perPage: 10,
+      currentPage: 1,
+      totalPages: 1,
+    },
     message: null,
     buttonRows: [
       [
@@ -141,11 +150,15 @@ class Client extends DJSClient {
   }
 
   public setQueue(queue: Queue): void {
-    this.queueState.queue = queue;
+    this.queueState.queue = { ...queue } as Queue;
   }
 
   public setQueueButtonRows(buttonRows: ButtonRow[]): void {
     this.queueState.buttonRows = buttonRows;
+  }
+
+  public setQueuePagination(queuePagination: QueuePagination): void {
+    this.queueState.pagination = queuePagination;
   }
 
   public embed(

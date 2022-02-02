@@ -7,11 +7,18 @@ import { Queue } from 'distube';
 
 export interface QueueState {
   queue: Queue | null;
+  pagination: QueuePagination;
   message: Message | null;
   buttonRows: ButtonRow[];
 }
 
 export type ButtonRow = QueueButton[];
+
+export interface QueuePagination {
+  perPage: number;
+  currentPage: number;
+  totalPages: number;
+}
 
 export interface QueueButton {
   customId: string;

@@ -19,23 +19,31 @@ const execute: ButtonCommandExecuteFunction = async (
 
   await autoJoin(client, guild, member);
 
-  if (queue && !queue.stopped && !queue.paused) {
-    queue.seek(0);
-    client.emit('updateQueueMessage', client, queue);
+  if (queue && !queue.stopped) {
+    const { pagination } = client.queueState;
+
+    if (pagination.currentPage < pagination.totalPages) {
+      client.setQueuePagination({
+        ...pagination,
+        ...{ currentPage: pagination.currentPage + 1 },
+      });
+
+      client.emit('updateQueueMessage', client, queue);
+    }
   }
 
   interaction.deferUpdate();
 };
 
 const command: ButtonCommand = {
-  name: 'queueSeekReset',
+  name: 'queueNextPage',
   commandType: CommandType.button,
   aliases: [],
   options: [],
   ephemeral: true,
   cooldown: 3,
   category: CommandCategory.music,
-  description: 'Replays the current song.',
+  description: 'Display the next page in the queue list',
   usage: 'Button click on queue.',
   execute,
 };

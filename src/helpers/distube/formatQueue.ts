@@ -1,11 +1,20 @@
 import { Queue } from 'distube';
 import { join } from 'lodash';
+import Client from '../../entities/client';
 
-const formatQueue = (q: Queue) => {
-  const queueSubset = q.songs.slice(0, 10);
+const formatQueue = (client: Client, queue: Queue) => {
+  const songsList = queue.songs;
+  const { perPage, currentPage } = client.queueState.pagination;
 
-  const queueList: string[] = queueSubset.map((item, id) => {
-    return `**${id + 1}** - ${item.name} | \`${item.formattedDuration}\``;
+  const songsInPage = songsList.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage,
+  );
+
+  const queueList: string[] = songsInPage.map((item, id) => {
+    return `**${id + 1 + (currentPage - 1) * 10}** - ${item.name} | \`${
+      item.formattedDuration
+    }\``;
   });
 
   return join(queueList, '\n');
