@@ -1,5 +1,6 @@
 import { ButtonInteraction, Guild, GuildMember } from 'discord.js';
 import { Queue } from 'distube';
+import { promisify } from 'util';
 import {
   ButtonCommand,
   CommandCategory,
@@ -8,6 +9,8 @@ import {
 } from '../../interfaces/command';
 import Client from '../../entities/client';
 import autoJoin from '../../helpers/distube/autoJoin';
+
+const wait = promisify(setTimeout);
 
 const execute: ButtonCommandExecuteFunction = async (
   client: Client,
@@ -20,7 +23,9 @@ const execute: ButtonCommandExecuteFunction = async (
   await autoJoin(client, guild, member);
 
   if (queue && !queue.stopped) {
-    queue.skip();
+    await queue.skip();
+    await wait(1000);
+    client.emit('updateQueueMessage', client, queue);
   }
 
   interaction.deferUpdate();

@@ -1,6 +1,6 @@
-import { promisify } from 'util';
 import { ButtonInteraction, Guild, GuildMember } from 'discord.js';
 import { Queue } from 'distube';
+import { promisify } from 'util';
 import {
   ButtonCommand,
   CommandCategory,
@@ -9,8 +9,6 @@ import {
 } from '../../interfaces/command';
 import Client from '../../entities/client';
 import autoJoin from '../../helpers/distube/autoJoin';
-
-const wait = promisify(setTimeout);
 
 const execute: ButtonCommandExecuteFunction = async (
   client: Client,
@@ -22,9 +20,8 @@ const execute: ButtonCommandExecuteFunction = async (
 
   await autoJoin(client, guild, member);
 
-  if (queue && !queue.stopped) {
-    await queue.previous();
-    await wait(1000);
+  if (queue && !queue.stopped && !queue.paused) {
+    queue.seek(0);
     client.emit('updateQueueMessage', client, queue);
   }
 
@@ -32,14 +29,14 @@ const execute: ButtonCommandExecuteFunction = async (
 };
 
 const command: ButtonCommand = {
-  name: 'queuePrevious',
+  name: 'queueSeekReset',
   commandType: CommandType.button,
   aliases: [],
   options: [],
   ephemeral: true,
   cooldown: 3,
   category: CommandCategory.music,
-  description: 'Play the previous song in the queue.',
+  description: 'Replays the current song.',
   usage: 'Button click on queue.',
   execute,
 };

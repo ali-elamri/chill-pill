@@ -3,7 +3,6 @@ import {
   ClientOptions,
   Collection,
   CommandInteraction,
-  Interaction,
   Message,
   MessageEmbed,
   MessageEmbedOptions,
@@ -12,6 +11,7 @@ import { promisify } from 'util';
 import glob from 'glob';
 import DisTube, { Queue } from 'distube';
 import { YouTubeDLPlugin } from '@distube/yt-dlp';
+import { ButtonRow, QueueState } from '../interfaces/queueState';
 import {
   ButtonCommand,
   CommandType,
@@ -50,11 +50,72 @@ class Client extends DJSClient {
     plugins: [new YouTubeDLPlugin()],
   });
 
-  public queue: Queue | null = null;
-
-  public queueInteraction: Interaction | null = null;
-
-  public queueMessage: Message<boolean> | null = null;
+  public queueState: QueueState = {
+    queue: null,
+    message: null,
+    buttonRows: [
+      [
+        {
+          customId: 'queuePreviousPage',
+          label: 'Previous Page',
+          style: 'SECONDARY',
+          disabled: true,
+        },
+        {
+          customId: 'queueNextPage',
+          label: 'Next Page',
+          style: 'SECONDARY',
+          disabled: true,
+        },
+      ],
+      [
+        {
+          customId: 'queuePause',
+          label: 'Pause',
+          style: 'SUCCESS',
+          disabled: false,
+        },
+        {
+          customId: 'queueResume',
+          label: 'Resume',
+          style: 'SUCCESS',
+          disabled: true,
+        },
+        {
+          customId: 'queueSeekReset',
+          label: 'Restart Song',
+          style: 'SECONDARY',
+          disabled: false,
+        },
+      ],
+      [
+        {
+          customId: 'queuePrevious',
+          label: 'Previous',
+          style: 'PRIMARY',
+          disabled: false,
+        },
+        {
+          customId: 'queueNext',
+          label: 'Next',
+          style: 'PRIMARY',
+          disabled: false,
+        },
+        {
+          customId: 'queueShuffle',
+          label: 'Shuffle',
+          style: 'SECONDARY',
+          disabled: false,
+        },
+        {
+          customId: 'queueStop',
+          label: 'Stop & Clear',
+          style: 'DANGER',
+          disabled: false,
+        },
+      ],
+    ],
+  };
 
   constructor(options: ClientOptions, config: Config) {
     super(options);
@@ -75,8 +136,16 @@ class Client extends DJSClient {
       });
   }
 
-  public setQueueMessage(queueMessage: Message<boolean>) {
-    this.queueMessage = queueMessage;
+  public setQueueMessage(queueMessage: Message<boolean>): void {
+    this.queueState.message = queueMessage;
+  }
+
+  public setQueue(queue: Queue): void {
+    this.queueState.queue = queue;
+  }
+
+  public setQueueButtonRows(buttonRows: ButtonRow[]): void {
+    this.queueState.buttonRows = buttonRows;
   }
 
   public embed(
@@ -125,10 +194,6 @@ class Client extends DJSClient {
   public async registerGlobalCommands() {
     Logger.info('Registering global commands.');
     // TODO
-  }
-
-  public setQueue(queue: Queue): void {
-    this.queue = queue;
   }
 
   private async loadEvents() {
@@ -184,8 +249,6 @@ class Client extends DJSClient {
       const command: Command = await this.importCommand(commandFile);
 
       this.commands.set(command.name, command);
-      console.log(command.name);
-
       this.categories.add(command.category);
     });
   }

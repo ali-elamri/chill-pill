@@ -1,11 +1,11 @@
-import { Queue, Song } from 'distube';
+import { Queue } from 'distube';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { updateQueuebuttons } from './updateQueueButton';
 import Client from '../../entities/client';
 import formatQueue from './formatQueue';
 
-const queueMessageBuilder = (client: Client, queue: Queue, song: Song) => {
-  console.log(`queue---${queue}`);
-  console.log(`song---${song}`);
+const queueMessageBuilder = (client: Client, queue: Queue) => {
+  const currentSong = queue.songs[0];
 
   const messageEmbed: MessageEmbed = new MessageEmbed()
     .setColor('LUMINOUS_VIVID_PINK')
@@ -21,13 +21,25 @@ const queueMessageBuilder = (client: Client, queue: Queue, song: Song) => {
       }),
       url: 'https://chillpill.io',
     })
-    .setImage(song.thumbnail as string)
-    .addField('Queue', formatQueue(queue, song))
-    .addField('Currently playing', `${song.name}`)
+    .setImage(currentSong.thumbnail as string)
+    .addField('Queue', formatQueue(queue))
+    .addField('Currently playing', `${currentSong.name}`)
     .addFields(
-      { name: 'Requester', value: `<@${song.user!.id}>`, inline: true },
-      { name: 'Views', value: `${song.views.toLocaleString()}`, inline: true },
-      { name: 'Views', value: `${song.likes.toLocaleString()}`, inline: true },
+      {
+        name: 'Requester',
+        value: `👤 <@${currentSong.user!.id}>`,
+        inline: true,
+      },
+      {
+        name: 'Views',
+        value: `👀 ${currentSong.views.toLocaleString()}`,
+        inline: true,
+      },
+      {
+        name: 'Likes',
+        value: `❤️ ${currentSong.likes.toLocaleString()}`,
+        inline: true,
+      },
     )
     .setTimestamp()
     .setFooter({
@@ -37,54 +49,40 @@ const queueMessageBuilder = (client: Client, queue: Queue, song: Song) => {
         format: 'png',
       }),
     });
-
-  const firstActionsRow = new MessageActionRow().addComponents(
-    new MessageButton()
-      .setCustomId('queuePreviousPage')
-      .setLabel('Previous Page')
-      .setStyle('SECONDARY')
-      .setDisabled(true),
-    new MessageButton()
-      .setCustomId('queueNextPage')
-      .setLabel('Next Page')
-      .setStyle('SECONDARY')
-      .setDisabled(true),
-  );
-
-  const secondActionsRow = new MessageActionRow().addComponents(
-    new MessageButton()
-      .setCustomId('queuePause')
-      .setLabel('Pause')
-      .setStyle('SUCCESS'),
-    new MessageButton()
-      .setCustomId('queueResume')
-      .setLabel('Resume')
-      .setStyle('SUCCESS'),
-    new MessageButton()
-      .setCustomId('queueStop')
-      .setLabel('Stop & Clear')
-      .setStyle('DANGER'),
-  );
-
-  const thirdActionsRow = new MessageActionRow().addComponents(
-    new MessageButton()
-      .setCustomId('queuePrevious')
-      .setLabel('Previous')
-      .setStyle('PRIMARY'),
-    new MessageButton()
-      .setCustomId('queueNext')
-      .setLabel('Next')
-      .setStyle('PRIMARY'),
-    new MessageButton()
-      .setCustomId('queueShuffle')
-      .setLabel('Shuffle')
-      .setStyle('SECONDARY'),
-  );
-
   return {
     embeds: [messageEmbed],
-    components: [firstActionsRow, secondActionsRow, thirdActionsRow],
+    components: buildButtons(client, queue),
   };
+};
+
+const buildButtons = (client: Client, queue: Queue) => {
+  // Update queue buttons based on client state
+  updateQueuebuttons(client, queue);
+
+  const { buttonRows } = client.queueState;
+
+  const components = buttonRows.map((row) => {
+    const messageButtons = row.map((button) => {
+      const messageButon = new MessageButton()
+        .setCustomId(button.customId)
+        .setLabel(button.label)
+        .setStyle(button.style);
+      if (button.disabled) {
+        messageButon.setDisabled(button.disabled);
+      }
+      if (button.url) {
+        messageButon.setURL(button.url);
+      }
+      if (button.emoji) {
+        messageButon.setEmoji(button.emoji);
+      }
+      return messageButon;
+    });
+
+    return new MessageActionRow().addComponents(...messageButtons);
+  });
+
+  return components;
 };
 
 export default queueMessageBuilder;

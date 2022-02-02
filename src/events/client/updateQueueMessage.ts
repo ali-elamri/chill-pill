@@ -1,4 +1,4 @@
-import { Queue, Song } from 'distube';
+import { Queue } from 'distube';
 import { Message } from 'discord.js';
 import {
   CustomEvent,
@@ -11,24 +11,21 @@ import queueMessageBuilder from '../../helpers/distube/queueMessageBuilder';
 const execute: CustomEventExecuteFunction = async (...args: unknown[]) => {
   const client: Client = args[0] as Client;
   const queue: Queue = args[1] as Queue;
-  const song: Song = args[2] as Song;
 
-  console.log('refreshed Q');
   let queueMessage = null;
-  const options = queueMessageBuilder(client, queue, song);
+  const options = queueMessageBuilder(client, queue);
 
-  if (!client.queueMessage) {
-    console.log('new Q message');
+  if (!client.queueState.message) {
     queueMessage = await queue.textChannel?.send(options);
   } else {
-    console.log('Q message updated');
-    queueMessage = await client.queueMessage.edit(options);
+    queueMessage = await client.queueState.message.edit(options);
   }
+
   client.setQueueMessage(queueMessage as Message);
 };
 
 export default {
-  name: 'refreshQueue',
+  name: 'updateQueueMessage',
   eventType: EventType.custom,
   execute,
 } as CustomEvent;
