@@ -5,21 +5,21 @@ import Client from '../../entities/client';
 import formatQueue from './formatQueue';
 import computePagination from './computePagination';
 
-const queueMessageBuilder = (client: Client, queue: Queue) => {
+const queueMessageBuilder = (client: Client) => {
+  const queue = client.queueState.queue as Queue;
+
   const currentSong = queue.songs[0];
 
   const songsCount = queue.songs.length;
 
-  const { currentPage, totalPages } = computePagination(client, queue);
+  const { currentPage, totalPages } = computePagination(client);
 
   const messageEmbed: MessageEmbed = new MessageEmbed().setColor(
     'LUMINOUS_VIVID_PINK',
   );
-  if (songsCount) {
+  if (client.queueState.isPlaying) {
     messageEmbed
-      .setTitle(
-        `🎶 Jukebox is ON! \u3000 ${songsCount} songs | ${queue.formattedDuration}`,
-      )
+      .setTitle(`🎶 Jukebox is ON! \u3000 ${songsCount} songs`)
       .setURL('https://chillpill.io/jukebox')
       .setAuthor({
         name: 'Chill Pill',
@@ -32,7 +32,7 @@ const queueMessageBuilder = (client: Client, queue: Queue) => {
       .setImage(currentSong.thumbnail as string)
       .addField(
         `Queue (Page ${currentPage}/${totalPages})`,
-        formatQueue(client, queue),
+        formatQueue(client),
       )
       .addField('Currently playing', `${currentSong.name}`)
       .addFields(
@@ -62,9 +62,7 @@ const queueMessageBuilder = (client: Client, queue: Queue) => {
       });
   } else {
     messageEmbed
-      .setTitle(
-        `🎶 Jukebox is OFF! \u3000 ${songsCount} songs | ${queue.formattedDuration}`,
-      )
+      .setTitle(`🎶 Jukebox is OFF! \u3000 ${songsCount} songs`)
       .setURL('https://chillpill.io/jukebox')
       .setAuthor({
         name: 'Chill Pill',
@@ -76,11 +74,11 @@ const queueMessageBuilder = (client: Client, queue: Queue) => {
       })
       .addField(
         `Queue (Page ${currentPage}/${totalPages})`,
-        formatQueue(client, client.queueState.queue as Queue),
+        formatQueue(client),
       )
       .setTimestamp()
       .setFooter({
-        text: `💊 Chill Pill ${'\u3000'.repeat(10)}`,
+        text: '💊 Chill Pill',
         iconURL: client.user?.displayAvatarURL({
           dynamic: true,
           format: 'png',
@@ -89,13 +87,13 @@ const queueMessageBuilder = (client: Client, queue: Queue) => {
   }
   return {
     embeds: [messageEmbed],
-    components: buildButtons(client, queue),
+    components: buildButtons(client),
   };
 };
 
-const buildButtons = (client: Client, queue: Queue) => {
+const buildButtons = (client: Client) => {
   // Update queue buttons based on client state
-  updateQueuebuttons(client, queue);
+  updateQueuebuttons(client);
 
   const { buttonRows } = client.queueState;
 

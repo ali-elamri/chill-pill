@@ -1,8 +1,9 @@
 import { Queue } from 'distube';
 import Client from '../../entities/client';
 
-const computePagination = (client: Client, queue: Queue) => {
-  const { perPage, currentPage, totalPages } = client.queueState.pagination;
+const computePagination = (client: Client) => {
+  const queue = client.queueState.queue as Queue;
+  const { perPage } = client.queueState.pagination;
 
   const songsCount = queue.songs.length;
   const updatedTotalPages = Math.floor((songsCount + perPage - 1) / perPage);

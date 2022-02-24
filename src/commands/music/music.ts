@@ -47,7 +47,7 @@ const execute: SlashCommandExecuteFunction = async (
     });
   }
 
-  const queue = client.distube.getQueue(voiceChannel);
+  const { queue } = client.queueState;
 
   const musicCommand: string = options.getSubcommand();
 

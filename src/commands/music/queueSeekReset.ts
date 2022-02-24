@@ -21,7 +21,8 @@ const execute: ButtonCommandExecuteFunction = async (
 
   if (queue && !queue.stopped && !queue.paused) {
     queue.seek(0);
-    client.emit('updateQueueMessage', client, queue);
+    client.setQueue(queue);
+    client.emit('updateQueueMessage', client);
   }
 
   interaction.deferUpdate();

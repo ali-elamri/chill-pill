@@ -1,5 +1,4 @@
-import { ButtonInteraction, Guild, GuildMember } from 'discord.js';
-import { Queue } from 'distube';
+import { ButtonInteraction } from 'discord.js';
 import {
   ButtonCommand,
   CommandCategory,
@@ -7,17 +6,12 @@ import {
   ButtonCommandExecuteFunction,
 } from '../../interfaces/command';
 import Client from '../../entities/client';
-import autoJoin from '../../helpers/distube/autoJoin';
 
 const execute: ButtonCommandExecuteFunction = async (
   client: Client,
   interaction: ButtonInteraction,
 ) => {
-  const member = interaction.member as GuildMember;
-  const guild = interaction.guild as Guild;
-  const queue = client.distube.getQueue(interaction) as Queue;
-
-  await autoJoin(client, guild, member);
+  const { queue } = client.queueState;
 
   if (queue && !queue.stopped) {
     const { pagination } = client.queueState;
@@ -28,7 +22,7 @@ const execute: ButtonCommandExecuteFunction = async (
         ...{ currentPage: pagination.currentPage + 1 },
       });
 
-      client.emit('updateQueueMessage', client, queue);
+      client.emit('updateQueueMessage', client);
     }
   }
 

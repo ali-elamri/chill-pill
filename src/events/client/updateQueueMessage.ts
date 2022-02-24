@@ -10,10 +10,10 @@ import queueMessageBuilder from '../../helpers/distube/queueMessageBuilder';
 
 const execute: CustomEventExecuteFunction = async (...args: unknown[]) => {
   const client: Client = args[0] as Client;
-  const queue: Queue = args[1] as Queue;
+  const queue = client.queueState.queue as Queue;
 
   let queueMessage = null;
-  const options = queueMessageBuilder(client, queue);
+  const options = queueMessageBuilder(client);
 
   if (!client.queueState.message) {
     queueMessage = await queue.textChannel?.send(options);

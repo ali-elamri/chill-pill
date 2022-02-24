@@ -10,6 +10,7 @@ export interface QueueState {
   pagination: QueuePagination;
   message: Message | null;
   buttonRows: ButtonRow[];
+  isPlaying: boolean;
 }
 
 export type ButtonRow = QueueButton[];

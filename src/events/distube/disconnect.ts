@@ -6,11 +6,9 @@ import {
 } from '../../interfaces/event';
 
 const execute: DistubeEventExecuteFunction = async (client, ...args) => {
-  const queue = args[0] as Queue;
+  client.setQueueIsPlating(false);
 
-  console.log(client.queueState);
-
-  client.emit('updateQueueMessage', client, queue);
+  client.emit('updateQueueMessage', client);
 };
 
 export default {

@@ -18,8 +18,9 @@ const execute: DistubeEventExecuteFunction = async (client, ...args) => {
   // TODO: end refactor---
 
   client.setQueue(queue);
+  client.setQueueIsPlating(true);
 
-  client.emit('updateQueueMessage', client, queue);
+  client.emit('updateQueueMessage', client);
 };
 
 export default {

@@ -62,68 +62,8 @@ class Client extends DJSClient {
       totalPages: 1,
     },
     message: null,
-    buttonRows: [
-      [
-        {
-          customId: 'queuePreviousPage',
-          label: 'Previous Page',
-          style: 'SECONDARY',
-          disabled: true,
-        },
-        {
-          customId: 'queueNextPage',
-          label: 'Next Page',
-          style: 'SECONDARY',
-          disabled: true,
-        },
-      ],
-      [
-        {
-          customId: 'queuePause',
-          label: 'Pause',
-          style: 'SUCCESS',
-          disabled: false,
-        },
-        {
-          customId: 'queueResume',
-          label: 'Resume',
-          style: 'SUCCESS',
-          disabled: true,
-        },
-        {
-          customId: 'queueSeekReset',
-          label: 'Restart Song',
-          style: 'SECONDARY',
-          disabled: false,
-        },
-      ],
-      [
-        {
-          customId: 'queuePrevious',
-          label: 'Previous',
-          style: 'PRIMARY',
-          disabled: false,
-        },
-        {
-          customId: 'queueNext',
-          label: 'Next',
-          style: 'PRIMARY',
-          disabled: false,
-        },
-        {
-          customId: 'queueShuffle',
-          label: 'Shuffle',
-          style: 'SECONDARY',
-          disabled: false,
-        },
-        {
-          customId: 'queueStop',
-          label: 'Stop & Clear',
-          style: 'DANGER',
-          disabled: false,
-        },
-      ],
-    ],
+    buttonRows: [],
+    isPlaying: true,
   };
 
   constructor(options: ClientOptions, config: Config) {
@@ -149,8 +89,10 @@ class Client extends DJSClient {
     this.queueState.message = queueMessage;
   }
 
-  public setQueue(queue: Queue): void {
+  public setQueue(queue: Queue): Queue {
     this.queueState.queue = { ...queue } as Queue;
+
+    return this.queueState.queue;
   }
 
   public setQueueButtonRows(buttonRows: ButtonRow[]): void {
@@ -159,6 +101,10 @@ class Client extends DJSClient {
 
   public setQueuePagination(queuePagination: QueuePagination): void {
     this.queueState.pagination = queuePagination;
+  }
+
+  public setQueueIsPlating(isPlaying: boolean): void {
+    this.queueState.isPlaying = isPlaying;
   }
 
   public embed(

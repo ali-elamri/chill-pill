@@ -2,9 +2,24 @@ import { Queue } from 'distube';
 import { ButtonRow, QueueButton } from '../../interfaces/queueState';
 import Client from '../../entities/client';
 
-export const updateQueuebuttons = (client: Client, queue: Queue) => {
-  // Stopped State
+import queueButtonRows from '../../data/queueButtonRows.json';
+
+export const updateQueuebuttons = (client: Client) => {
+  const queue = client.queueState.queue as Queue;
+
+  // Check if buttonRows have been initialised
+  const { buttonRows } = client.queueState;
+  const { isPlaying } = client.queueState;
+
+  if (!buttonRows || isPlaying) {
+    client.setQueueButtonRows(queueButtonRows.on as ButtonRow[]);
+  }
+  if (!isPlaying) {
+    client.setQueueButtonRows(queueButtonRows.off as ButtonRow[]);
+  }
+
   if (!queue || queue.stopped) {
+    // Stopped State
     updateQueueButton(client, 'queuePreviousPage', { disabled: true });
     updateQueueButton(client, 'queueNextPage', { disabled: true });
     updateQueueButton(client, 'queuePause', { disabled: true });
