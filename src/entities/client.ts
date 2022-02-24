@@ -3,16 +3,37 @@ import {
   ClientOptions,
   Collection,
   CommandInteraction,
+  Message,
   MessageEmbed,
   MessageEmbedOptions,
 } from 'discord.js';
 import { promisify } from 'util';
 import glob from 'glob';
-import { Event } from '../interfaces/event';
+import DisTube, { Queue } from 'distube';
+import { YouTubeDLPlugin } from '@distube/yt-dlp';
+import {
+  QueuePagination,
+  ButtonRow,
+  QueueState,
+} from '../interfaces/queueState';
+import {
+  ButtonCommand,
+  CommandType,
+  SlashCommand,
+  CommandCategory,
+  Command,
+} from '../interfaces/command';
+import {
+  ClientEvent,
+  DistubeEvent,
+  CustomEvent,
+  DistubeArgs,
+  Event,
+  EventType,
+} from '../interfaces/event';
 import { Config } from './config';
 import Logger from './logger';
-import { Command, CommandCategory } from '../interfaces/command';
-import GuildService from '../services/guildService';
+// import GuildService from '../services/guildService';
 
 const globPromise = promisify(glob);
 class Client extends DJSClient {
@@ -24,6 +45,27 @@ class Client extends DJSClient {
 
   public categories: Set<string> = new Set();
 
+  public distube = new DisTube(this, {
+    emitNewSongOnly: false,
+    leaveOnFinish: true,
+    leaveOnStop: false,
+    youtubeDL: false,
+    emptyCooldown: 3,
+    plugins: [new YouTubeDLPlugin()],
+  });
+
+  public queueState: QueueState = {
+    queue: null,
+    pagination: {
+      perPage: 10,
+      currentPage: 1,
+      totalPages: 1,
+    },
+    message: null,
+    buttonRows: [],
+    isPlaying: true,
+  };
+
   constructor(options: ClientOptions, config: Config) {
     super(options);
     this.config = config;
@@ -31,6 +73,7 @@ class Client extends DJSClient {
 
   public async boot() {
     this.loadEvents();
+    // this.loadDistubeEvent();
     this.loadCommands();
 
     this.login(this.config.client_token)
@@ -40,6 +83,28 @@ class Client extends DJSClient {
       .catch((e) => {
         Logger.error(e);
       });
+  }
+
+  public setQueueMessage(queueMessage: Message<boolean>): void {
+    this.queueState.message = queueMessage;
+  }
+
+  public setQueue(queue: Queue): Queue {
+    this.queueState.queue = { ...queue } as Queue;
+
+    return this.queueState.queue;
+  }
+
+  public setQueueButtonRows(buttonRows: ButtonRow[]): void {
+    this.queueState.buttonRows = buttonRows;
+  }
+
+  public setQueuePagination(queuePagination: QueuePagination): void {
+    this.queueState.pagination = queuePagination;
+  }
+
+  public setQueueIsPlating(isPlaying: boolean): void {
+    this.queueState.isPlaying = isPlaying;
   }
 
   public embed(
@@ -61,8 +126,11 @@ class Client extends DJSClient {
 
   public async registerGuildCommands() {
     const commands: Command[] = [...this.commands.values()].filter(
-      (command: Command) => {
-        return command.category !== CommandCategory.admin;
+      (command) => {
+        return (
+          command.commandType !== CommandType.button &&
+          command.category !== CommandCategory.admin
+        );
       },
     );
 
@@ -78,7 +146,7 @@ class Client extends DJSClient {
         return;
       }
       guild.commands.set(commands);
-      GuildService.save(guild.id, guild.name);
+      // GuildService.save(guild.id, guild.name);
     });
   }
 
@@ -93,16 +161,40 @@ class Client extends DJSClient {
     );
 
     eventFiles.map(async (eventFile: string) => {
-      const event: Event = await this.importFile(eventFile);
+      const event: Event = await this.importEvent(eventFile);
       this.events.set(event.name, event);
-      if (event.once) {
-        this.once(event.name, (interaction) => {
-          event.execute(this, interaction);
-        });
-      } else {
-        this.on(event.name, (interaction) => {
-          event.execute(this, interaction);
-        });
+
+      switch (event.eventType) {
+        case EventType.client: {
+          const ev = event as ClientEvent;
+          if (ev.once) {
+            this.once(ev.name, (interaction) => {
+              ev.execute(this, interaction);
+            });
+          } else {
+            this.on(ev.name, (interaction) => {
+              ev.execute(this, interaction);
+            });
+          }
+          break;
+        }
+        case EventType.custom: {
+          const ev = event as CustomEvent;
+          this.on(ev.name, (...args: unknown[]) => {
+            ev.execute(...args);
+          });
+          break;
+        }
+        case EventType.distube: {
+          const ev = event as DistubeEvent;
+          this.distube.on(ev.name, (...args: DistubeArgs) => {
+            ev.execute(this, ...args);
+          });
+          break;
+        }
+        default: {
+          break;
+        }
       }
     });
   }
@@ -113,14 +205,42 @@ class Client extends DJSClient {
     );
 
     commandFiles.map(async (commandFile: string) => {
-      const command: Command = await this.importFile(commandFile);
+      const command: Command = await this.importCommand(commandFile);
+
       this.commands.set(command.name, command);
       this.categories.add(command.category);
     });
   }
 
-  private async importFile(file: string) {
-    return (await import(file))?.default;
+  private async importCommand(file: string): Promise<Command> {
+    const command: Command = (await import(file))?.default;
+    switch (command.commandType) {
+      case CommandType.command:
+        return command as SlashCommand;
+
+      case CommandType.button:
+        return command as ButtonCommand;
+
+      default:
+        return command;
+    }
+  }
+
+  private async importEvent(file: string): Promise<Event> {
+    const event: Event = (await import(file))?.default;
+    switch (event.eventType) {
+      case EventType.client:
+        return event as ClientEvent;
+
+      case EventType.custom:
+        return event as CustomEvent;
+
+      case EventType.distube:
+        return event as DistubeEvent;
+
+      default:
+        return event;
+    }
   }
 }
 

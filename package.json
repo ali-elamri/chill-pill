@@ -17,12 +17,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.7.0",
+    "@distube/yt-dlp": "^0.0.2",
+    "@distube/ytdl-core": "^4.10.0",
     "discord.js": "^13.3.1",
+    "distube": "^3.2.2",
     "dotenv": "^10.0.0",
     "firebase": "^9.6.0",
     "glob": "^7.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "sodium": "^3.0.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {

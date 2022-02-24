@@ -1,0 +1,88 @@
+{
+  "on": [
+    [
+      {
+        "customId": "queuePreviousPage",
+        "label": "Previous Page",
+        "style": "SECONDARY",
+        "disabled": true
+      },
+      {
+        "customId": "queueNextPage",
+        "label": "Next Page",
+        "style": "SECONDARY",
+        "disabled": true
+      }
+    ],
+    [
+      {
+        "customId": "queuePause",
+        "label": "Pause",
+        "style": "SUCCESS",
+        "disabled": false
+      },
+      {
+        "customId": "queueResume",
+        "label": "Resume",
+        "style": "SUCCESS",
+        "disabled": true
+      },
+      {
+        "customId": "queueSeekReset",
+        "label": "Restart Song",
+        "style": "SECONDARY",
+        "disabled": false
+      }
+    ],
+    [
+      {
+        "customId": "queuePrevious",
+        "label": "Previous",
+        "style": "PRIMARY",
+        "disabled": false
+      },
+      {
+        "customId": "queueNext",
+        "label": "Next",
+        "style": "PRIMARY",
+        "disabled": false
+      },
+      {
+        "customId": "queueShuffle",
+        "label": "Shuffle",
+        "style": "SECONDARY",
+        "disabled": false
+      },
+      {
+        "customId": "queueStop",
+        "label": "Stop & Clear",
+        "style": "DANGER",
+        "disabled": false
+      }
+    ]
+  ],
+  "off": [
+    [
+      {
+        "customId": "queuePreviousPage",
+        "label": "Previous Page",
+        "style": "SECONDARY",
+        "disabled": true
+      },
+      {
+        "customId": "queueNextPage",
+        "label": "Next Page",
+        "style": "SECONDARY",
+        "disabled": true
+      }
+    ],
+    [
+      {
+        "customId": "queueJoin",
+        "label": "Join back",
+        "style": "PRIMARY",
+        "disabled": false
+      }
+    ]
+  ]
+}

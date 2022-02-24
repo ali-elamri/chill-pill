@@ -1,13 +1,17 @@
 // import { promisify } from 'util';
 import Logger from '../../entities/logger';
-import { Event, ExecuteFunction } from '../../interfaces/event';
+import {
+  ClientEvent,
+  EventExecuteFunction,
+  EventType,
+} from '../../interfaces/event';
 // import TodoService from '../../services/todoService';
 // import todosJSON from '../../data/todos.json';
 // import { TodoCategory } from '../../interfaces/todo';
 
 // const wait = promisify(setTimeout);
 
-const execute: ExecuteFunction = async (client) => {
+const execute: EventExecuteFunction = async (client) => {
   client.user?.setActivity('Chilling... 💊');
   Logger.info('💊 Chill Pill is ready!');
   client.registerGuildCommands();
@@ -27,6 +31,7 @@ const execute: ExecuteFunction = async (client) => {
 
 export default {
   name: 'ready',
+  eventType: EventType.client,
   once: true,
   execute,
-} as Event;
+} as ClientEvent;

@@ -1,12 +1,14 @@
 import { CommandInteraction, EmbedFieldData, MessageEmbed } from 'discord.js';
 import Client from '../../entities/client';
 import {
-  Command,
+  SlashCommand,
   CommandCategory,
-  ExecuteFunction,
+  CommandType,
+  SlashCommandExecuteFunction,
+  Command,
 } from '../../interfaces/command';
 
-const execute: ExecuteFunction = async (
+const execute: SlashCommandExecuteFunction = async (
   client: Client,
   interaction: CommandInteraction,
 ) => {
@@ -95,8 +97,9 @@ const execute: ExecuteFunction = async (
   });
 };
 
-const command: Command = {
+const command: SlashCommand = {
   name: 'help',
+  commandType: CommandType.command,
   aliases: [],
   options: [
     {

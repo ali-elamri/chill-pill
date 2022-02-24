@@ -65,34 +65,9 @@ const execute: SlashCommandExecuteFunction = async (
 };
 
 const command: SlashCommand = {
-  name: 'todo',
+  name: 'config',
   commandType: CommandType.command,
   aliases: [],
-  options: [
-    {
-      name: 'category',
-      type: 'STRING',
-      description: 'Todo category',
-      choices: [
-        {
-          name: 'Structure',
-          value: TodoCategory.structure,
-        },
-        {
-          name: 'Features',
-          value: TodoCategory.features,
-        },
-        {
-          name: 'Commands',
-          value: TodoCategory.commands,
-        },
-        {
-          name: 'Events',
-          value: TodoCategory.events,
-        },
-      ],
-    },
-  ],
   ephemeral: true,
   cooldown: 3,
   category: CommandCategory.info,
